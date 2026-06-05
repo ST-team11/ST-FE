@@ -1,0 +1,254 @@
+.quiz-page {
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.quiz-header {
+  padding: 20px 20px 0;
+  flex-shrink: 0;
+}
+
+.btn-back-header {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #333;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.progress-area {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #2e6b4a;
+}
+
+.progress-track {
+  width: 100%;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #2e6b4a;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* Body */
+.quiz-body {
+  flex: 1;
+  padding: 28px 20px 16px;
+  overflow-y: auto;
+}
+
+.question-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.45;
+  margin-bottom: 20px;
+}
+
+.question-subtitle {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 20px;
+  margin-top: -12px;
+}
+
+/* Single select options */
+.options-single {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.option-single {
+  width: 100%;
+  padding: 16px 18px;
+  background: #fff;
+  border: 1.5px solid #d8d8d8;
+  border-radius: 12px;
+  font-size: 15px;
+  color: #1a1a1a;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.option-single.selected {
+  border-color: #2e6b4a;
+  background: #f0faf3;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+.option-single:active {
+  opacity: 0.85;
+}
+
+/* Multi select options */
+.options-multi {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.option-multi {
+  padding: 14px 10px;
+  background: #fff;
+  border: 1.5px solid #d8d8d8;
+  border-radius: 12px;
+  font-size: 14px;
+  color: #1a1a1a;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.option-multi.selected {
+  border-color: #2e6b4a;
+  background: #f0faf3;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+.option-multi:nth-child(15) {
+  grid-column: 1 / -1;
+}
+
+.option-multi:active {
+  opacity: 0.85;
+}
+
+/* Bill input */
+.bill-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bill-card {
+  border: 1.5px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.bill-card-label {
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  background: #f8f8f8;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.bill-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  gap: 8px;
+}
+
+.bill-field-label {
+  font-size: 13px;
+  color: #888;
+  white-space: nowrap;
+}
+
+.bill-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  color: #1a1a1a;
+  text-align: right;
+  background: transparent;
+  -moz-appearance: textfield;
+}
+
+.bill-input::-webkit-outer-spin-button,
+.bill-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.bill-unit {
+  font-size: 13px;
+  color: #888;
+  white-space: nowrap;
+}
+
+/* Footer */
+.quiz-footer {
+  padding: 12px 20px 28px;
+  flex-shrink: 0;
+  background: #fff;
+}
+
+.quiz-footer.single-btn {
+  display: block;
+}
+
+.quiz-footer.double-btn {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-prev {
+  flex: 1;
+  max-width: 100px;
+  padding: 16px;
+  background: #f0faf3;
+  color: #2e6b4a;
+  border: 1.5px solid #2e6b4a;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-next {
+  flex: 1;
+  padding: 16px;
+  background: #c8c8c8;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: not-allowed;
+  transition: background 0.15s;
+}
+
+.btn-next.active {
+  background: #2e6b4a;
+  cursor: pointer;
+}
+
+.btn-next.active:active {
+  opacity: 0.88;
+}
+
+.quiz-footer.single-btn .btn-next {
+  width: 100%;
+}

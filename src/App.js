@@ -1,23 +1,47 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import IntroPage from './pages/IntroPage';
+import QuizPage from './pages/QuizPage';
+import LoadingPage from './pages/LoadingPage';
+import ResultPage from './pages/ResultPage';
 import './App.css';
 
 function App() {
+  const [screen, setScreen] = useState('intro');
+  const [answers, setAnswers] = useState({});
+  const [result, setResult] = useState(null);
+
+  const handleStart = () => setScreen('quiz');
+
+  const handleQuizComplete = (finalAnswers) => {
+    setAnswers(finalAnswers);
+    setScreen('loading');
+  };
+
+  const handleLoadingComplete = (resultData) => {
+    setResult(resultData);
+    setScreen('result');
+  };
+
+  const handleRestart = () => {
+    setAnswers({});
+    setResult(null);
+    setScreen('intro');
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-shell">
+      {screen === 'intro' && (
+        <IntroPage onStart={handleStart} />
+      )}
+      {screen === 'quiz' && (
+        <QuizPage onComplete={handleQuizComplete} onBack={handleRestart} />
+      )}
+      {screen === 'loading' && (
+        <LoadingPage answers={answers} onComplete={handleLoadingComplete} />
+      )}
+      {screen === 'result' && (
+        <ResultPage result={result} onRestart={handleRestart} />
+      )}
     </div>
   );
 }
