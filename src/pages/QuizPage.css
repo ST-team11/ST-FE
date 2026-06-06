@@ -35,7 +35,7 @@
 .progress-label {
   font-size: 14px;
   font-weight: 700;
-  color: #2e6b4a;
+  color: #00995e;
 }
 
 .progress-track {
@@ -48,7 +48,7 @@
 
 .progress-fill {
   height: 100%;
-  background: #2e6b4a;
+  background: #00995e;
   border-radius: 3px;
   transition: width 0.3s ease;
 }
@@ -92,11 +92,13 @@
   color: #1a1a1a;
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
 
 .option-single.selected {
-  border-color: #2e6b4a;
+  border-color: #00995e;
   background: #f0faf3;
   color: #1a1a1a;
   font-weight: 500;
@@ -122,11 +124,13 @@
   color: #1a1a1a;
   text-align: center;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
 
 .option-multi.selected {
-  border-color: #2e6b4a;
+  border-color: #00995e;
   background: #f0faf3;
   color: #1a1a1a;
   font-weight: 500;
@@ -219,8 +223,8 @@
   max-width: 100px;
   padding: 16px;
   background: #f0faf3;
-  color: #2e6b4a;
-  border: 1.5px solid #2e6b4a;
+  color: #00995e;
+  border: 1.5px solid #00995e;
   border-radius: 12px;
   font-size: 16px;
   font-weight: 600;
@@ -241,7 +245,7 @@
 }
 
 .btn-next.active {
-  background: #2e6b4a;
+  background: #00995e;
   cursor: pointer;
 }
 

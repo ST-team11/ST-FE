@@ -74,7 +74,7 @@
 .btn-start {
   width: 100%;
   padding: 18px;
-  background-color: #2e6b4a;
+  background-color: #00995e;
   color: #fff;
   font-size: 18px;
   font-weight: 700;
@@ -97,7 +97,7 @@
 
 .social-login-row {
   display: flex;
-  gap: 15px;
+  gap: 20px;
 }
 
 .social-btn {

@@ -16,7 +16,7 @@
 
 .result-tagline {
   font-size: 14px;
-  color: #2e6b4a;
+  color: #00995e;
   font-weight: 600;
   margin-bottom: 8px;
 }
@@ -100,10 +100,10 @@
 }
 
 .trait-list li::before {
-  content: '•';
+  content: "•";
   position: absolute;
   left: 0;
-  color: #2e6b4a;
+  color: #00995e;
 }
 
 /* Tips section */
@@ -115,7 +115,7 @@
 .tips-title {
   font-size: 15px;
   font-weight: 700;
-  color: #2e6b4a;
+  color: #00995e;
   margin-bottom: 12px;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -151,7 +151,7 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  background: #2e6b4a;
+  background: #00995e;
   color: #fff;
 }
 
@@ -188,17 +188,20 @@
 }
 
 .btn-social-save.kakao {
+  height: 50px;
   background-color: #fee500;
   color: #1a1a1a;
 }
 
 .btn-social-save.naver {
+  height: 50px;
   background-color: #03c75a;
   color: #fff;
 }
 
 .btn-social-save.google {
   background-color: #fff;
+  height: 50px;
   color: #333;
   border: 1.5px solid #ddd;
 }

@@ -1,11 +1,11 @@
-import React from 'react';
-import './ResultPage.css';
+import React from "react";
+import "./ResultPage.css";
 
 const SCORE_BARS = [
-  { key: 'electricity', label: '전기 절약', color: '#F5A623' },
-  { key: 'water', label: '수도 절약', color: '#4A90D9' },
-  { key: 'gas', label: '가스 절약', color: '#E74C3C' },
-  { key: 'consciousness', label: '절약 의식', color: '#2e6b4a' },
+  { key: "electricity", label: "전기 절약", color: "#F5A623" },
+  { key: "water", label: "수도 절약", color: "#4A90D9" },
+  { key: "gas", label: "가스 절약", color: "#E74C3C" },
+  { key: "consciousness", label: "절약 의식", color: "#00995E" },
 ];
 
 function ScoreBar({ label, score, color }) {
@@ -66,9 +66,7 @@ function ResultPage({ result, onRestart }) {
         <hr className="divider" />
 
         <div className="action-buttons">
-          <button className="btn-action share">
-            🧑‍💻 결과 공유하기
-          </button>
+          <button className="btn-action share">🧑‍💻 결과 공유하기</button>
           <button className="btn-action save-img">
             🖼️ 결과 이미지 저장하기
           </button>
@@ -93,7 +91,7 @@ function ResultPage({ result, onRestart }) {
             네이버로 내 정보 저장
           </button>
           <button className="btn-social-save google">
-            <span className="social-icon google-icon">G</span>
+            <span className="social-icon google-icon">G &nbsp;&nbsp;</span>
             구글로 내 정보 저장
           </button>
         </div>
