@@ -1,4 +1,6 @@
 import React from "react";
+import { loginWithProvider } from "../lib/auth";
+import LoginStatusButton from "../components/LoginStatusButton";
 import "./IntroPage.css";
 import intro_icon from "../image/intro_icon.svg";
 import kkt_icon from "../image/kkt_icon.svg";
@@ -8,6 +10,7 @@ import google_icon from "../image/google_icon.svg";
 function IntroPage({ onStart }) {
   return (
     <div className="intro-page">
+      <LoginStatusButton />
       <div className="intro-content">
         <p className="intro-subtitle">우리집 에너지, 얼마나 쓰고 있을까?</p>
         <h1 className="intro-title">
@@ -55,14 +58,23 @@ function IntroPage({ onStart }) {
         <p className="intro-login-hint">로그인으로 내 정보 저장하고 불러오기</p>
 
         <div className="social-login-row">
-          <button className="social-btn kakao">
+          <button
+            className="social-btn kakao"
+            onClick={() => loginWithProvider("kakao")}
+          >
             <img src={kkt_icon} alt="카카오톡 소셜" />
           </button>
-          <button className="social-btn naver">
+          <button
+            className="social-btn naver"
+            onClick={() => loginWithProvider("naver")}
+          >
             <img src={naver_icon} alt="네이버 소셜" />
           </button>
 
-          <button className="social-btn google">
+          <button
+            className="social-btn google"
+            onClick={() => loginWithProvider("google")}
+          >
             <img src={google_icon} alt="구글 소셜" />
           </button>
         </div>
