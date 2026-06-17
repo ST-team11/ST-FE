@@ -34,6 +34,13 @@
   margin-bottom: 36px;
 }
 
+.result-summary {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
 /* Score bars */
 .score-section {
   width: 100%;
@@ -70,6 +77,14 @@
   height: 100%;
   border-radius: 6px;
   transition: width 0.8s ease;
+}
+
+.score-caption {
+  width: 100%;
+  text-align: left;
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 24px;
 }
 
 /* Divider */
@@ -133,6 +148,38 @@
   font-size: 14px;
   color: #444;
   line-height: 1.55;
+}
+
+.tips-direction {
+  font-size: 13px;
+  color: #777;
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+
+/* Auth / save status */
+.auth-status {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-logout {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: #f2f2f2;
+  color: #666;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-action:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 
 /* Action buttons */

@@ -1,4 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
+import { supabase } from "../lib/supabaseClient";
+import { saveAssessmentResult } from "../lib/api";
+import { loginWithProvider } from "../lib/auth";
+import { savePendingResult } from "../lib/pendingResult";
 import "./ResultPage.css";
 
 const SCORE_BARS = [
@@ -7,6 +11,10 @@ const SCORE_BARS = [
   { key: "gas", label: "가스 절약", color: "#E74C3C" },
   { key: "consciousness", label: "절약 의식", color: "#00995E" },
 ];
+
+// 비교점수(낮을수록 절약)를 막대 절약도 0~100으로 변환
+const clamp = (value) => Math.max(0, Math.min(100, value));
+const toSavingPercent = (comparisonScore) => clamp(170 - comparisonScore);
 
 function ScoreBar({ label, score, color }) {
   return (
@@ -22,43 +30,81 @@ function ScoreBar({ label, score, color }) {
   );
 }
 
-function ResultPage({ result, onRestart }) {
-  const { type, scores } = result;
+function ResultPage({ evaluation, payload, session, onRestart }) {
+  const [saveState, setSaveState] = useState("idle"); // idle, saving, saved
+
+  const { resultType, comparisonScores, savingScore, recommendationSnapshot } =
+    evaluation;
+
+  const displayScores = {
+    electricity: toSavingPercent(comparisonScores.electricity),
+    water: toSavingPercent(comparisonScores.water),
+    gas: toSavingPercent(comparisonScores.gas),
+    consciousness: clamp(100 - savingScore),
+  };
+
+  const handleLogin = async (provider) => {
+    // 리디렉션 후 결과 화면 복귀용 보관 (Google만 실제 진행)
+    if (provider === "google") savePendingResult(evaluation, payload);
+    await loginWithProvider(provider);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setSaveState("idle");
+  };
+
+  const handleSave = async () => {
+    if (!session) return;
+    setSaveState("saving");
+    try {
+      await saveAssessmentResult(payload, session.access_token);
+      setSaveState("saved");
+    } catch (error) {
+      setSaveState("idle");
+      window.alert(`저장에 실패했어요: ${error.message}`);
+    }
+  };
+
+  const saveLabel = {
+    idle: "내 결과 저장하기",
+    saving: "저장 중...",
+    saved: "저장 완료 ✓",
+  }[saveState];
 
   return (
     <div className="result-page">
       <div className="result-body">
-        <p className="result-tagline">{type.tagline}</p>
-        <h1 className="result-type-name">{type.name}</h1>
+        <p className="result-tagline">{resultType.tagline}</p>
+        <h1 className="result-type-name">{resultType.title}</h1>
 
-        <div className="result-character">{type.character}</div>
+        <div className="result-character">{resultType.emoji}</div>
+        <p className="result-summary">{resultType.summary}</p>
 
         <div className="score-section">
           {SCORE_BARS.map(({ key, label, color }) => (
             <ScoreBar
               key={key}
               label={label}
-              score={scores[key]}
+              score={displayScores[key]}
               color={color}
             />
           ))}
         </div>
-
-        <hr className="divider" />
-
-        <ul className="trait-list">
-          {type.traits.map((trait, i) => (
-            <li key={i}>{trait}</li>
-          ))}
-        </ul>
+        <p className="score-caption">
+          막대가 길수록 서울 평균보다 적게 쓰고 있다는 뜻이에요.
+        </p>
 
         <hr className="divider" />
 
         <div className="tips-section">
           <h3 className="tips-title">이렇게 해보세요!</h3>
+          <p className="tips-direction">{resultType.tipDirection}</p>
           <ul className="tips-list">
-            {type.tips.map((tip, i) => (
-              <li key={i}>{tip}</li>
+            {recommendationSnapshot.map((tip) => (
+              <li key={tip.id}>
+                <strong>{tip.title}</strong> — {tip.description}
+              </li>
             ))}
           </ul>
         </div>
@@ -77,24 +123,53 @@ function ResultPage({ result, onRestart }) {
 
         <hr className="divider" />
 
-        <p className="social-save-hint">
-          로그인하면 내 정보를 저장하고 불러올 수 있어요!
-        </p>
+        {session ? (
+          <div className="auth-status">
+            <p className="social-save-hint">
+              {session.user.email}님으로 로그인됨
+            </p>
+            <button
+              className="btn-action"
+              onClick={handleSave}
+              disabled={saveState !== "idle"}
+            >
+              {saveLabel}
+            </button>
+            <button className="btn-logout" onClick={handleLogout}>
+              로그아웃
+            </button>
+          </div>
+        ) : (
+          <>
+            <p className="social-save-hint">
+              로그인하면 내 정보를 저장하고 불러올 수 있어요!
+            </p>
 
-        <div className="social-save-buttons">
-          <button className="btn-social-save kakao">
-            <span className="social-icon">💬</span>
-            카카오로 내 정보 저장
-          </button>
-          <button className="btn-social-save naver">
-            <span className="social-icon naver-icon">N</span>
-            네이버로 내 정보 저장
-          </button>
-          <button className="btn-social-save google">
-            <span className="social-icon google-icon">G &nbsp;&nbsp;</span>
-            구글로 내 정보 저장
-          </button>
-        </div>
+            <div className="social-save-buttons">
+              <button
+                className="btn-social-save kakao"
+                onClick={() => handleLogin("kakao")}
+              >
+                <span className="social-icon">💬</span>
+                카카오로 내 정보 저장
+              </button>
+              <button
+                className="btn-social-save naver"
+                onClick={() => handleLogin("naver")}
+              >
+                <span className="social-icon naver-icon">N</span>
+                네이버로 내 정보 저장
+              </button>
+              <button
+                className="btn-social-save google"
+                onClick={() => handleLogin("google")}
+              >
+                <span className="social-icon google-icon">G &nbsp;&nbsp;</span>
+                구글로 내 정보 저장
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
