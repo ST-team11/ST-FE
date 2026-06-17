@@ -1,15 +1,35 @@
 import React, { useEffect } from 'react';
-import { calculateResult } from '../utils/calculate';
+import { buildAssessmentPayload } from '../utils/mapAnswers';
+import { submitAssessment } from '../lib/api';
 import './LoadingPage.css';
 
-function LoadingPage({ answers, onComplete }) {
+// 스피너 깜빡임 방지용 최소 노출 시간
+const MIN_DURATION = 1800;
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function LoadingPage({ quizData, onComplete, onError }) {
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const result = calculateResult(answers);
-      onComplete(result);
-    }, 2500);
-    return () => clearTimeout(timer);
-  }, [answers, onComplete]);
+    let cancelled = false;
+
+    async function evaluate() {
+      try {
+        const payload = buildAssessmentPayload(quizData);
+        const [result] = await Promise.all([
+          submitAssessment(payload),
+          delay(MIN_DURATION),
+        ]);
+        if (!cancelled) onComplete(result, payload);
+      } catch (error) {
+        if (!cancelled) onError(error.message);
+      }
+    }
+
+    evaluate();
+    return () => {
+      cancelled = true;
+    };
+  }, [quizData, onComplete, onError]);
 
   return (
     <div className="loading-page">

@@ -51,7 +51,7 @@ function QuizPage({ onComplete, onBack }) {
   const handleNext = () => {
     if (!canProceed()) return;
     if (isLast) {
-      onComplete({ ...answers, bill: billData });
+      onComplete({ answers, billData });
     } else {
       setCurrentIndex((i) => i + 1);
     }
