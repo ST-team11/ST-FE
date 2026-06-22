@@ -79,10 +79,8 @@ function ResultPage({ evaluation, payload, session, onRestart }) {
         <h1 className="result-type-name">{resultType.title}</h1>
 
         <div className="result-character">
-          {type.image ? (
-            <img src={type.image} alt={type.name} />
-          ) : (
-            type.character
+          {resultType.image && (
+            <img src={resultType.image} alt={resultType.name} />
           )}
         </div>
         <p className="result-summary">{resultType.summary}</p>
