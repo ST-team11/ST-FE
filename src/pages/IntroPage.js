@@ -64,12 +64,6 @@ function IntroPage({ onStart }) {
           >
             <img src={kkt_icon} alt="카카오톡 소셜" />
           </button>
-          <button
-            className="social-btn naver"
-            onClick={() => loginWithProvider("naver")}
-          >
-            <img src={naver_icon} alt="네이버 소셜" />
-          </button>
 
           <button
             className="social-btn google"
