@@ -29,9 +29,13 @@
 }
 
 .result-character {
-  font-size: 96px;
   line-height: 1;
   margin-bottom: 36px;
+}
+.result-character img {
+  width: 190px;
+  height: auto;
+  object-fit: contain;
 }
 
 .result-summary {

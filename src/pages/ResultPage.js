@@ -78,7 +78,13 @@ function ResultPage({ evaluation, payload, session, onRestart }) {
         <p className="result-tagline">{resultType.tagline}</p>
         <h1 className="result-type-name">{resultType.title}</h1>
 
-        <div className="result-character">{resultType.emoji}</div>
+        <div className="result-character">
+          {type.image ? (
+            <img src={type.image} alt={type.name} />
+          ) : (
+            type.character
+          )}
+        </div>
         <p className="result-summary">{resultType.summary}</p>
 
         <div className="score-section">
@@ -153,13 +159,7 @@ function ResultPage({ evaluation, payload, session, onRestart }) {
                 <span className="social-icon">💬</span>
                 카카오로 내 정보 저장
               </button>
-              <button
-                className="btn-social-save naver"
-                onClick={() => handleLogin("naver")}
-              >
-                <span className="social-icon naver-icon">N</span>
-                네이버로 내 정보 저장
-              </button>
+
               <button
                 className="btn-social-save google"
                 onClick={() => handleLogin("google")}
