@@ -49,7 +49,10 @@ function App() {
       console.log("[auth]", event, next?.user?.email ?? "(no session)");
       setSession(next);
     });
-    return () => listener.subscription.unsubscribe();
+
+    return () => {
+      listener?.subscription?.unsubscribe?.();
+    };
   }, []);
 
   const handleStart = () => setScreen('quiz');
