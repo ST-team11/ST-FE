@@ -4,7 +4,6 @@ import LoginStatusButton from "../components/LoginStatusButton";
 import "./IntroPage.css";
 import intro_icon from "../image/intro_icon.svg";
 import kkt_icon from "../image/kkt_icon.svg";
-import naver_icon from "../image/naver_icon.svg";
 import google_icon from "../image/google_icon.svg";
 
 function IntroPage({ onStart }) {
