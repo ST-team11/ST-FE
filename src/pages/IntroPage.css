@@ -7,6 +7,38 @@
   align-items: center;
 }
 
+.login-status-bar {
+  width: 100%;
+  padding: 16px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(0, 153, 94, 0.1);
+  border-bottom: 1px solid rgba(0, 153, 94, 0.2);
+}
+
+.login-email {
+  font-size: 14px;
+  color: #00995e;
+  font-weight: 600;
+}
+
+.logout-btn {
+  padding: 8px 16px;
+  background-color: transparent;
+  color: #00995e;
+  border: 1.5px solid #00995e;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logout-btn:active {
+  background-color: rgba(0, 153, 94, 0.1);
+}
+
 .intro-content {
   width: 100%;
   max-width: 430px;

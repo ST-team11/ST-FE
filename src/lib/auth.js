@@ -40,4 +40,6 @@ import { supabase } from './supabaseClient';
 
 export async function logout() {
   await supabase.auth.signOut();
+  // 상태 변경 이벤트 발생 (mock client 지원)
+  window.dispatchEvent(new Event('auth-state-change'));
 }
