@@ -5,13 +5,7 @@ import LoadingPage from './pages/LoadingPage';
 import ResultPage from './pages/ResultPage';
 import { supabase } from './lib/supabaseClient';
 import { loadPendingResult, clearPendingResult } from './lib/pendingResult';
-import { calculateResult } from './utils/calculate';
-import { buildAssessmentPayload } from './utils/mapAnswers';
 import './App.css';
-
-const DEV_TEST_EMAIL = 'jaehuig8@gmail.com';
-// ResultPage 기능 테스트용 목 답변 (중간 수준)
-const DEV_MOCK_ANSWERS = { 2: 0, 3: 1, 4: [], 5: 1, 6: 1, 7: 1, 8: 1, 9: 1, 10: 1, 11: 1, 14: [0, 1] };
 
 function App() {
   const [screen, setScreen] = useState('intro');
@@ -20,53 +14,20 @@ function App() {
   const [payload, setPayload] = useState(null);
   const [session, setSession] = useState(null);
 
-  const goToDevResult = () => {
-    setEvaluation(calculateResult(DEV_MOCK_ANSWERS));
-    setPayload(buildAssessmentPayload({ answers: DEV_MOCK_ANSWERS, billData: {} }));
-    setScreen('result');
-  };
-
   useEffect(() => {
     // OAuth 리디렉션 복귀 시 직전 결과를 복원해 결과 화면 유지
     const pending = loadPendingResult();
-    const hasPending = !!pending;
     if (pending) {
       setEvaluation(pending.evaluation);
       setPayload(pending.payload);
       setScreen('result');
     }
 
-    // 로그인 진단: 복귀 URL에 OAuth 에러/코드/토큰이 실려 왔는지 확인
-    const params = new URLSearchParams(window.location.search);
-    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
-    console.log("[auth:debug] url ?code =", params.get("code") ?? "(none)");
-    console.log("[auth:debug] url #access_token =", hashParams.get("access_token") ? "(present)" : "(none)");
-    const oauthError = params.get("error") || hashParams.get("error");
-    if (oauthError) {
-      console.error(
-        "[auth:debug] OAuth 에러 응답 =",
-        oauthError,
-        params.get("error_description") || hashParams.get("error_description"),
-      );
-    }
-
-    supabase.auth.getSession().then(({ data, error }) => {
-      console.log("[auth:debug] getSession =", {
-        hasSession: !!data.session,
-        email: data.session?.user?.email,
-        error,
-      });
+    supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
-      if (!hasPending && data.session?.user?.email === DEV_TEST_EMAIL) {
-        goToDevResult();
-      }
     });
     const { data: listener } = supabase.auth.onAuthStateChange((event, next) => {
-      console.log("[auth]", event, next?.user?.email ?? "(no session)");
       setSession(next);
-      if (event === 'SIGNED_IN' && next?.user?.email === DEV_TEST_EMAIL) {
-        goToDevResult();
-      }
     });
 
     return () => {
