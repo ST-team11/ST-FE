@@ -26,3 +26,7 @@ yarn-error.log*
 # Claude Code
 .claude/
 .claude*
+
+# Supabase CLI cache (자동 생성, 커밋 불필요)
+supabase/.temp
+supabase/.branches
