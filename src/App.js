@@ -5,7 +5,13 @@ import LoadingPage from './pages/LoadingPage';
 import ResultPage from './pages/ResultPage';
 import { supabase } from './lib/supabaseClient';
 import { loadPendingResult, clearPendingResult } from './lib/pendingResult';
+import { calculateResult } from './utils/calculate';
+import { buildAssessmentPayload } from './utils/mapAnswers';
 import './App.css';
+
+const DEV_TEST_EMAIL = 'jaehuig8@gmail.com';
+// ResultPage 기능 테스트용 목 답변 (중간 수준)
+const DEV_MOCK_ANSWERS = { 2: 0, 3: 1, 4: [], 5: 1, 6: 1, 7: 1, 8: 1, 9: 1, 10: 1, 11: 1, 14: [0, 1] };
 
 function App() {
   const [screen, setScreen] = useState('intro');
@@ -14,9 +20,16 @@ function App() {
   const [payload, setPayload] = useState(null);
   const [session, setSession] = useState(null);
 
+  const goToDevResult = () => {
+    setEvaluation(calculateResult(DEV_MOCK_ANSWERS));
+    setPayload(buildAssessmentPayload({ answers: DEV_MOCK_ANSWERS, billData: {} }));
+    setScreen('result');
+  };
+
   useEffect(() => {
     // OAuth 리디렉션 복귀 시 직전 결과를 복원해 결과 화면 유지
     const pending = loadPendingResult();
+    const hasPending = !!pending;
     if (pending) {
       setEvaluation(pending.evaluation);
       setPayload(pending.payload);
@@ -44,10 +57,16 @@ function App() {
         error,
       });
       setSession(data.session);
+      if (!hasPending && data.session?.user?.email === DEV_TEST_EMAIL) {
+        goToDevResult();
+      }
     });
     const { data: listener } = supabase.auth.onAuthStateChange((event, next) => {
       console.log("[auth]", event, next?.user?.email ?? "(no session)");
       setSession(next);
+      if (event === 'SIGNED_IN' && next?.user?.email === DEV_TEST_EMAIL) {
+        goToDevResult();
+      }
     });
 
     return () => {
