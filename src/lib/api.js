@@ -1,4 +1,4 @@
-// 백엔드 Edge Function 호출 (ST-BE/offlog/supabase/functions)
+// Edge Function 호출 (supabase/functions/)
 const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
@@ -25,13 +25,17 @@ async function callFunction(name, payload, accessToken) {
   return data;
 }
 
-// 인증 없이 답변 평가 후 결과만 반환
-export async function submitAssessment(payload) {
-  const data = await callFunction('submit-assessment', payload);
-  return data.result;
-}
-
-// 로그인 사용자의 결과 평가 후 DB 저장
-export async function saveAssessmentResult(payload, accessToken) {
-  return callFunction('save-assessment-result', payload, accessToken);
+// 로그인 사용자의 결과를 DB에 저장 (계산은 FE에서 완료된 결과를 전달)
+export async function saveAssessmentResult(payload, evaluation, accessToken) {
+  return callFunction(
+    'save-assessment-result',
+    {
+      ...payload,
+      clientResult: {
+        resultCode: evaluation.type.code,
+        scores: evaluation.scores,
+      },
+    },
+    accessToken,
+  );
 }
