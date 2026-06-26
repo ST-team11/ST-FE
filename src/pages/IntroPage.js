@@ -1,6 +1,6 @@
 import React from "react";
-import { loginWithProvider, logout } from "../lib/auth";
-import LoginStatusButton from "../components/LoginStatusButton";
+import { loginWithProvider } from "../lib/auth";
+import { supabase } from "../lib/supabaseClient";
 import "./IntroPage.css";
 import intro_icon from "../image/intro_icon.svg";
 import kkt_icon from "../image/kkt_icon.svg";
@@ -8,21 +8,11 @@ import google_icon from "../image/google_icon.svg";
 
 function IntroPage({ onStart, session }) {
   const handleLogout = async () => {
-    await logout();
+    await supabase.auth.signOut();
   };
 
   return (
     <div className="intro-page">
-      {session ? (
-        <div className="login-status-bar">
-          <span className="login-email">{session.user?.email}</span>
-          <button className="logout-btn" onClick={handleLogout}>
-            로그아웃
-          </button>
-        </div>
-      ) : (
-        <LoginStatusButton />
-      )}
       <div className="intro-content">
         <p className="intro-subtitle">우리집 에너지, 얼마나 쓰고 있을까?</p>
         <h1 className="intro-title">
@@ -67,10 +57,20 @@ function IntroPage({ onStart, session }) {
           테스트 시작하기
         </button>
 
-        {!session && (
-          <>
-            <p className="intro-login-hint">로그인으로 내 정보 저장하고 불러오기</p>
-
+        {session ? (
+          <div className="intro-logged-in">
+            <p className="intro-logged-in-email">
+              <span className="intro-logged-in-dot" />
+              <span className="email-text">{session.user.email}</span>
+            </p>
+            <p className="intro-logged-in-hint">로그인 상태에서 테스트하면 결과가 자동으로 저장돼요</p>
+            <button className="btn-logout-intro" onClick={handleLogout}>
+              로그아웃
+            </button>
+          </div>
+        ) : (
+          <div className="intro-login-section">
+            <p className="intro-login-hint">로그인하면 내 결과를 저장하고 불러올 수 있어요</p>
             <div className="social-login-row">
               <button
                 className="social-btn kakao"
@@ -78,7 +78,6 @@ function IntroPage({ onStart, session }) {
               >
                 <img src={kkt_icon} alt="카카오톡 소셜" />
               </button>
-
               <button
                 className="social-btn google"
                 onClick={() => loginWithProvider("google")}
@@ -86,7 +85,7 @@ function IntroPage({ onStart, session }) {
                 <img src={google_icon} alt="구글 소셜" />
               </button>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>

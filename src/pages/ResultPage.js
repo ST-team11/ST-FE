@@ -12,10 +12,6 @@ const SCORE_BARS = [
   { key: "consciousness", label: "절약 의식", color: "#00995E" },
 ];
 
-// 비교점수(낮을수록 절약)를 막대 절약도 0~100으로 변환
-const clamp = (value) => Math.max(0, Math.min(100, value));
-const toSavingPercent = (comparisonScore) => clamp(170 - comparisonScore);
-
 function ScoreBar({ label, score, color }) {
   return (
     <div className="score-row">
@@ -33,18 +29,9 @@ function ScoreBar({ label, score, color }) {
 function ResultPage({ evaluation, payload, session, onRestart }) {
   const [saveState, setSaveState] = useState("idle"); // idle, saving, saved
 
-  const { resultType, comparisonScores, savingScore, recommendationSnapshot } =
-    evaluation;
-
-  const displayScores = {
-    electricity: toSavingPercent(comparisonScores.electricity),
-    water: toSavingPercent(comparisonScores.water),
-    gas: toSavingPercent(comparisonScores.gas),
-    consciousness: clamp(100 - savingScore),
-  };
+  const { type, scores } = evaluation;
 
   const handleLogin = async (provider) => {
-    // 리디렉션 후 결과 화면 복귀용 보관 (Google만 실제 진행)
     if (provider === "google") savePendingResult(evaluation, payload);
     await loginWithProvider(provider);
   };
@@ -75,40 +62,36 @@ function ResultPage({ evaluation, payload, session, onRestart }) {
   return (
     <div className="result-page">
       <div className="result-body">
-        <p className="result-tagline">{resultType.tagline}</p>
-        <h1 className="result-type-name">{resultType.title}</h1>
+        <p className="result-tagline">{type.tagline}</p>
+        <h1 className="result-type-name">{type.title}</h1>
 
         <div className="result-character">
-          {resultType.image && (
-            <img src={resultType.image} alt={resultType.name} />
-          )}
+          {type.image && <img src={type.image} alt={type.name} />}
         </div>
-        <p className="result-summary">{resultType.summary}</p>
+        <p className="result-summary">{type.summary}</p>
 
         <div className="score-section">
           {SCORE_BARS.map(({ key, label, color }) => (
             <ScoreBar
               key={key}
               label={label}
-              score={displayScores[key]}
+              score={scores[key]}
               color={color}
             />
           ))}
         </div>
         <p className="score-caption">
-          막대가 길수록 서울 평균보다 적게 쓰고 있다는 뜻이에요.
+          막대가 길수록 에너지를 절약하고 있다는 뜻이에요.
         </p>
 
         <hr className="divider" />
 
         <div className="tips-section">
           <h3 className="tips-title">이렇게 해보세요!</h3>
-          <p className="tips-direction">{resultType.tipDirection}</p>
+          <p className="tips-direction">{type.tipDirection}</p>
           <ul className="tips-list">
-            {recommendationSnapshot.map((tip) => (
-              <li key={tip.id}>
-                <strong>{tip.title}</strong> — {tip.description}
-              </li>
+            {type.tips.map((tip, i) => (
+              <li key={i}>{tip}</li>
             ))}
           </ul>
         </div>
