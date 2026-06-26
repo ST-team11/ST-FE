@@ -113,7 +113,7 @@ function ResultPage({ evaluation, payload, session, onRestart }) {
     if (!session) return;
     setSaveState("saving");
     try {
-      await saveAssessmentResult(payload, session.access_token);
+      await saveAssessmentResult(payload, evaluation, session.access_token);
       setSaveState("saved");
     } catch (error) {
       setSaveState("idle");
