@@ -85,6 +85,16 @@
   cursor: pointer;
 }
 
+.result-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px 0 16px;
+  background: #fff;
+}
+
 .result-tagline {
   font-size: 14px;
   color: #00995e;

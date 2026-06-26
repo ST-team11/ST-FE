@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { toBlob } from "html-to-image";
 import { supabase } from "../lib/supabaseClient";
 import { saveAssessmentResult } from "../lib/api";
 import { loginWithProvider } from "../lib/auth";
@@ -58,6 +59,8 @@ function ScoreBar({ label, score, color }) {
 function ResultPage({ evaluation, payload, session, onRestart }) {
   const [saveState, setSaveState] = useState("idle"); // idle, saving, saved
   const [showShareModal, setShowShareModal] = useState(false);
+  const [saveImageState, setSaveImageState] = useState("idle"); // idle, saving, saved
+  const cardRef = useRef(null);
 
   const { type, scores } = evaluation;
 
@@ -69,6 +72,25 @@ function ResultPage({ evaluation, payload, session, onRestart }) {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setSaveState("idle");
+  };
+
+  const handleSaveImage = async () => {
+    if (!cardRef.current) return;
+    setSaveImageState("saving");
+    try {
+      const blob = await toBlob(cardRef.current, { pixelRatio: 2, backgroundColor: "#ffffff" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `에너지절약테스트_${type.title}.png`;
+      a.click();
+      URL.revokeObjectURL(url);
+      setSaveImageState("saved");
+      setTimeout(() => setSaveImageState("idle"), 2000);
+    } catch {
+      window.alert("이미지 저장에 실패했어요.");
+      setSaveImageState("idle");
+    }
   };
 
   const handleShare = async () => {
@@ -114,38 +136,40 @@ function ResultPage({ evaluation, payload, session, onRestart }) {
         />
       )}
       <div className="result-body">
-        <p className="result-tagline">{type.tagline}</p>
-        <h1 className="result-type-name">{type.title}</h1>
+        <div ref={cardRef} className="result-card">
+          <p className="result-tagline">{type.tagline}</p>
+          <h1 className="result-type-name">{type.title}</h1>
 
-        <div className="result-character">
-          {type.image && <img src={type.image} alt={type.name} />}
-        </div>
-        <p className="result-summary">{type.summary}</p>
+          <div className="result-character">
+            {type.image && <img src={type.image} alt={type.name} />}
+          </div>
+          <p className="result-summary">{type.summary}</p>
 
-        <div className="score-section">
-          {SCORE_BARS.map(({ key, label, color }) => (
-            <ScoreBar
-              key={key}
-              label={label}
-              score={scores[key]}
-              color={color}
-            />
-          ))}
-        </div>
-        <p className="score-caption">
-          막대가 길수록 에너지를 절약하고 있다는 뜻이에요.
-        </p>
-
-        <hr className="divider" />
-
-        <div className="tips-section">
-          <h3 className="tips-title">이렇게 해보세요!</h3>
-          <p className="tips-direction">{type.tipDirection}</p>
-          <ul className="tips-list">
-            {type.tips.map((tip, i) => (
-              <li key={i}>{tip}</li>
+          <div className="score-section">
+            {SCORE_BARS.map(({ key, label, color }) => (
+              <ScoreBar
+                key={key}
+                label={label}
+                score={scores[key]}
+                color={color}
+              />
             ))}
-          </ul>
+          </div>
+          <p className="score-caption">
+            막대가 길수록 에너지를 절약하고 있다는 뜻이에요.
+          </p>
+
+          <hr className="divider" />
+
+          <div className="tips-section">
+            <h3 className="tips-title">이렇게 해보세요!</h3>
+            <p className="tips-direction">{type.tipDirection}</p>
+            <ul className="tips-list">
+              {type.tips.map((tip, i) => (
+                <li key={i}>{tip}</li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <hr className="divider" />
@@ -154,8 +178,16 @@ function ResultPage({ evaluation, payload, session, onRestart }) {
           <button className="btn-action share" onClick={handleShare}>
             🧑‍💻 결과 공유하기
           </button>
-          <button className="btn-action save-img">
-            🖼️ 결과 이미지 저장하기
+          <button
+            className="btn-action save-img"
+            onClick={handleSaveImage}
+            disabled={saveImageState !== "idle"}
+          >
+            {saveImageState === "saving"
+              ? "저장 중..."
+              : saveImageState === "saved"
+              ? "저장 완료 ✓"
+              : "🖼️ 결과 이미지 저장하기"}
           </button>
           <button className="btn-action restart" onClick={onRestart}>
             테스트 다시하기
