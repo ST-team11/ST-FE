@@ -12,6 +12,35 @@ const SCORE_BARS = [
   { key: "consciousness", label: "절약 의식", color: "#00995E" },
 ];
 
+function ShareModal({ url, onClose }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.alert("링크 복사에 실패했어요.");
+    }
+  };
+
+  return (
+    <div className="share-modal-overlay" onClick={onClose}>
+      <div className="share-modal" onClick={(e) => e.stopPropagation()}>
+        <p className="share-modal-title">결과 공유하기</p>
+        <div className="share-url-box">
+          <span className="share-url">{url}</span>
+          <button className="share-copy-btn" onClick={handleCopy}>
+            {copied ? "복사됨 ✓" : "복사"}
+          </button>
+        </div>
+        <button className="share-modal-close" onClick={onClose}>닫기</button>
+      </div>
+    </div>
+  );
+}
+
 function ScoreBar({ label, score, color }) {
   return (
     <div className="score-row">
@@ -28,6 +57,7 @@ function ScoreBar({ label, score, color }) {
 
 function ResultPage({ evaluation, payload, session, onRestart }) {
   const [saveState, setSaveState] = useState("idle"); // idle, saving, saved
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const { type, scores } = evaluation;
 
@@ -39,6 +69,22 @@ function ResultPage({ evaluation, payload, session, onRestart }) {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setSaveState("idle");
+  };
+
+  const handleShare = async () => {
+    const shareUrl = window.location.href;
+    const shareTitle = `나는 ${type.title}!`;
+    const shareText = `${type.tagline}\n에너지 절약 테스트를 직접 해보세요!`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: shareTitle, text: shareText, url: shareUrl });
+      } catch (error) {
+        if (error.name !== "AbortError") setShowShareModal(true);
+      }
+    } else {
+      setShowShareModal(true);
+    }
   };
 
   const handleSave = async () => {
@@ -61,6 +107,12 @@ function ResultPage({ evaluation, payload, session, onRestart }) {
 
   return (
     <div className="result-page">
+      {showShareModal && (
+        <ShareModal
+          url={window.location.href}
+          onClose={() => setShowShareModal(false)}
+        />
+      )}
       <div className="result-body">
         <p className="result-tagline">{type.tagline}</p>
         <h1 className="result-type-name">{type.title}</h1>
@@ -99,7 +151,9 @@ function ResultPage({ evaluation, payload, session, onRestart }) {
         <hr className="divider" />
 
         <div className="action-buttons">
-          <button className="btn-action share">🧑‍💻 결과 공유하기</button>
+          <button className="btn-action share" onClick={handleShare}>
+            🧑‍💻 결과 공유하기
+          </button>
           <button className="btn-action save-img">
             🖼️ 결과 이미지 저장하기
           </button>
