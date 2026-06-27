@@ -3,6 +3,7 @@ import IntroPage from './pages/IntroPage';
 import QuizPage from './pages/QuizPage';
 import LoadingPage from './pages/LoadingPage';
 import ResultPage from './pages/ResultPage';
+import HistoryPage from './pages/HistoryPage';
 import { supabase } from './lib/supabaseClient';
 import { loadPendingResult, clearPendingResult } from './lib/pendingResult';
 import './App.css';
@@ -61,10 +62,17 @@ function App() {
     setScreen('intro');
   };
 
+  const [historyOrigin, setHistoryOrigin] = useState('result');
+  const handleViewHistory = (origin = 'result') => {
+    setHistoryOrigin(origin);
+    setScreen('history');
+  };
+  const handleBackFromHistory = () => setScreen(historyOrigin);
+
   return (
     <div className="app-shell">
       {screen === 'intro' && (
-        <IntroPage onStart={handleStart} session={session} />
+        <IntroPage onStart={handleStart} session={session} onViewHistory={() => handleViewHistory('intro')} />
       )}
       {screen === 'quiz' && (
         <QuizPage onComplete={handleQuizComplete} onBack={handleRestart} />
@@ -82,7 +90,11 @@ function App() {
           payload={payload}
           session={session}
           onRestart={handleRestart}
+          onViewHistory={handleViewHistory}
         />
+      )}
+      {screen === 'history' && (
+        <HistoryPage session={session} onBack={handleBackFromHistory} />
       )}
     </div>
   );

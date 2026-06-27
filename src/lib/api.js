@@ -25,6 +25,19 @@ async function callFunction(name, payload, accessToken) {
   return data;
 }
 
+// 로그인 사용자의 이전 결과 목록 조회
+export async function getAssessmentHistory(accessToken) {
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/assessment_results?select=id,result_type,comparison_score,created_at&order=created_at.desc&limit=20`, {
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  const data = await response.json().catch(() => null);
+  if (!response.ok) throw new Error(data?.message ?? `요청에 실패했어요 (${response.status})`);
+  return data;
+}
+
 // 로그인 사용자의 결과를 DB에 저장 (계산은 FE에서 완료된 결과를 전달)
 export async function saveAssessmentResult(payload, evaluation, accessToken) {
   return callFunction(
