@@ -4,6 +4,8 @@ import { supabase } from "../lib/supabaseClient";
 import { saveAssessmentResult } from "../lib/api";
 import { loginWithProvider } from "../lib/auth";
 import { savePendingResult } from "../lib/pendingResult";
+import kkt_icon from "../image/kkt_icon.svg";
+import google_icon from "../image/google_icon.svg";
 import "./ResultPage.css";
 
 const SCORE_BARS = [
@@ -56,7 +58,7 @@ function ScoreBar({ label, score, color }) {
   );
 }
 
-function ResultPage({ evaluation, payload, session, onRestart }) {
+function ResultPage({ evaluation, payload, session, onRestart, onViewHistory }) {
   const [saveState, setSaveState] = useState("idle"); // idle, saving, saved
   const [showShareModal, setShowShareModal] = useState(false);
   const [saveImageState, setSaveImageState] = useState("idle"); // idle, saving, saved
@@ -197,10 +199,14 @@ function ResultPage({ evaluation, payload, session, onRestart }) {
         <hr className="divider" />
 
         {session ? (
-          <div className="auth-status">
-            <p className="social-save-hint">
-              {session.user.email}님으로 로그인됨
-            </p>
+          <div className="auth-panel">
+            <div className="auth-panel-header">
+              <div className="auth-panel-user">
+                <span className="auth-panel-dot" />
+                <span className="auth-panel-email">{session.user.email}</span>
+              </div>
+              <button className="auth-panel-logout-btn" onClick={handleLogout}>로그아웃</button>
+            </div>
             <button
               className="btn-action"
               onClick={handleSave}
@@ -208,33 +214,32 @@ function ResultPage({ evaluation, payload, session, onRestart }) {
             >
               {saveLabel}
             </button>
-            <button className="btn-logout" onClick={handleLogout}>
-              로그아웃
+            <button className="btn-action-secondary" onClick={onViewHistory}>
+              이전 결과 보기
             </button>
           </div>
         ) : (
           <>
+          <div className="intro-login-section">
             <p className="social-save-hint">
               로그인하면 내 정보를 저장하고 불러올 수 있어요!
             </p>
-
-            <div className="social-save-buttons">
+            <div className="social-login-row">
               <button
-                className="btn-social-save kakao"
-                onClick={() => handleLogin("kakao")}
+                className="social-btn kakao"
+                onClick={() => loginWithProvider("kakao")}
               >
-                <span className="social-icon">💬</span>
-                카카오로 내 정보 저장
+                <img src={kkt_icon} alt="카카오톡 소셜" />
               </button>
-
               <button
-                className="btn-social-save google"
-                onClick={() => handleLogin("google")}
+                className="social-btn google"
+                onClick={() => loginWithProvider("google")}
               >
-                <span className="social-icon google-icon">G &nbsp;&nbsp;</span>
-                구글로 내 정보 저장
+                <img src={google_icon} alt="구글 소셜" />
               </button>
             </div>
+          </div>
+
           </>
         )}
       </div>

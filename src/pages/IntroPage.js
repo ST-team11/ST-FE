@@ -6,7 +6,7 @@ import intro_icon from "../image/intro_icon.svg";
 import kkt_icon from "../image/kkt_icon.svg";
 import google_icon from "../image/google_icon.svg";
 
-function IntroPage({ onStart, session }) {
+function IntroPage({ onStart, session, onViewHistory }) {
   const handleLogout = async () => {
     await supabase.auth.signOut();
   };
@@ -58,14 +58,18 @@ function IntroPage({ onStart, session }) {
         </button>
 
         {session ? (
-          <div className="intro-logged-in">
-            <p className="intro-logged-in-email">
-              <span className="intro-logged-in-dot" />
-              <span className="email-text">{session.user.email}</span>
-            </p>
-            <p className="intro-logged-in-hint">로그인 상태에서 테스트하면 결과가 자동으로 저장돼요</p>
-            <button className="btn-logout-intro" onClick={handleLogout}>
-              로그아웃
+          <div className="intro-auth">
+            <div className="intro-auth-status">
+              <span className="intro-auth-dot" />
+              <span className="intro-auth-email">{session.user.email}</span>
+              <span className="intro-auth-sep">·</span>
+              <button className="intro-auth-logout" onClick={handleLogout}>로그아웃</button>
+            </div>
+            <button className="intro-auth-history" onClick={onViewHistory}>
+              이전 결과 보기
+              <svg className="intro-auth-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
             </button>
           </div>
         ) : (

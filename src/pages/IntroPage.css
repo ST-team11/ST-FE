@@ -113,7 +113,7 @@
   border: none;
   border-radius: 14px;
   cursor: pointer;
-  margin-bottom: 35px;
+  margin-bottom: 24px;
   letter-spacing: 0.5px;
 }
 
@@ -166,40 +166,24 @@
   gap: 14px;
 }
 
-/* Logged-in state — glassmorphism */
-.intro-logged-in {
+/* Auth section — logged-in (MD3: no card, whitespace-driven) */
+.intro-auth {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  width: 100%;
-  padding: 16px 20px 14px;
-  background: rgba(255, 255, 255, 0.38);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.65);
+  gap: 0;
 }
 
-.intro-logged-in-email {
+/* Caption row: dot · email · separator · logout */
+.intro-auth-status {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #1a1a1a;
-  max-width: 100%;
+  gap: 6px;
+  height: 20px;
 }
 
-.intro-logged-in-email span.email-text {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 220px;
-}
-
-.intro-logged-in-dot {
-  display: inline-block;
+.intro-auth-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -213,29 +197,58 @@
   50%       { opacity: 0.45; transform: scale(0.75); }
 }
 
-.intro-logged-in-hint {
-  font-size: 11.5px;
-  color: rgba(30, 60, 40, 0.55);
-  margin: 0;
-  line-height: 1.55;
-  text-align: center;
+.intro-auth-email {
+  font-size: 12px;
+  color: #555;
+  font-weight: 500;
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.btn-logout-intro {
-  margin-top: 6px;
-  padding: 0;
+.intro-auth-sep {
+  font-size: 12px;
+  color: #bbb;
+  line-height: 1;
+  user-select: none;
+}
+
+.intro-auth-logout {
   background: none;
   border: none;
-  font-size: 11.5px;
-  font-weight: 500;
-  color: rgba(30, 60, 40, 0.45);
+  font-size: 12px;
+  color: #999;
   cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  text-decoration-color: rgba(30, 60, 40, 0.25);
-  letter-spacing: 0.1px;
+  padding: 0;
+  font-weight: 500;
 }
 
-.btn-logout-intro:active {
-  color: rgba(30, 60, 40, 0.7);
+.intro-auth-logout:active {
+  color: #555;
+}
+
+/* Text Button + Chevron (MD3: secondary action) */
+.intro-auth-history {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #00995e;
+  cursor: pointer;
+  padding: 12px 8px;
+  min-height: 48px;
+}
+
+.intro-auth-history:active {
+  opacity: 0.65;
+}
+
+.intro-auth-chevron {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
 }

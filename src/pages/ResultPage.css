@@ -242,24 +242,82 @@
   margin-bottom: 12px;
 }
 
-/* Auth / save status */
-.auth-status {
+/* Auth panel (logged-in) */
+.auth-panel {
   width: 100%;
+  background: #f4fdf8;
+  border: 1.5px solid #c8e8d6;
+  border-radius: 16px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.btn-logout {
+.auth-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.auth-panel-user {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.auth-panel-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #00995e;
+  flex-shrink: 0;
+  animation: auth-dot-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes auth-dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.45; transform: scale(0.75); }
+}
+
+.auth-panel-email {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auth-panel-logout-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.btn-action-secondary {
   width: 100%;
-  padding: 12px;
+  padding: 16px;
   border: none;
   border-radius: 12px;
-  background: #f2f2f2;
-  color: #666;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  background: #daf0e6;
+  color: #00995e;
+}
+
+.btn-action-secondary:active {
+  opacity: 0.88;
 }
 
 .btn-action:disabled {
