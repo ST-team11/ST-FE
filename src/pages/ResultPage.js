@@ -3,7 +3,6 @@ import { toBlob } from "html-to-image";
 import { supabase } from "../lib/supabaseClient";
 import { saveAssessmentResult } from "../lib/api";
 import { loginWithProvider } from "../lib/auth";
-import { savePendingResult } from "../lib/pendingResult";
 import kkt_icon from "../image/kkt_icon.svg";
 import google_icon from "../image/google_icon.svg";
 import "./ResultPage.css";
