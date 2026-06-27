@@ -3,13 +3,6 @@ import { getAssessmentHistory } from "../lib/api";
 import resultTypes from "../data/resultTypes";
 import "./HistoryPage.css";
 
-const SCORE_BARS = [
-  { key: "electricity", label: "전기", color: "#F5A623" },
-  { key: "water", label: "수도", color: "#4A90D9" },
-  { key: "gas", label: "가스", color: "#E74C3C" },
-  { key: "consciousness", label: "의식", color: "#00995E" },
-];
-
 const codeToType = Object.fromEntries(resultTypes.map((t) => [t.code, t]));
 
 function formatDate(isoString) {

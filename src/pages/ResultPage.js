@@ -66,11 +66,6 @@ function ResultPage({ evaluation, payload, session, onRestart, onViewHistory }) 
 
   const { type, scores } = evaluation;
 
-  const handleLogin = async (provider) => {
-    if (provider === "google") savePendingResult(evaluation, payload);
-    await loginWithProvider(provider);
-  };
-
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setSaveState("idle");
